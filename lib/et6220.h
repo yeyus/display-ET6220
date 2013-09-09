@@ -9,6 +9,17 @@
  *
  */
 
+#include <string.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <getopt.h>
+#include <fcntl.h>
+#include <sys/ioctl.h>
+#include <linux/types.h>
+#include <linux/spi/spidev.h>
+
 /* CMD1 constants */
 #define DISPLAY_9SEGMENTS 0
 #define DISPLAY_8SEGMENTS 1
@@ -86,6 +97,4 @@ uint8_t cmd4_display_control (uint8_t on, uint8_t brightness);
 
 void et6220_init(spi_et6220_device *dev, uint8_t segments);
 uint8_t et6220_command(spi_et6220_device *dev, uint8_t tx[], uint8_t *rx, uint8_t size);
-
-/* Communication */
 

@@ -21,10 +21,9 @@
 #include <sys/ioctl.h>
 #include <linux/types.h>
 #include <linux/spi/spidev.h>
+#include "lib/et6220.h"
 
 #define DEBUG 1
-
-#define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
 
 static void pabort(const char *s)
 {
@@ -37,199 +36,6 @@ static uint8_t mode;
 static uint8_t bits = 8;
 static uint32_t speed = 500000;
 static uint16_t delay;
-
-/*
- * ASCII TO SEGMENT
- */
-
-static uint8_t number_to_segment[10] = {
-	0b11111100, //0
-	0b01100000, //1
-	0b11011010, //2
-	0b11110010, //3
-	0b01100110, //4
-	0b10110100, //5
-	0b10111110, //6
-	0b11100000, //7
-	0b11111110, //8
-	0b11100110, //9
-};
-
-// TODO Letters
-/*
- * A,b,C,c,d,E,e,F,G,H,I,J,j,L,O,P,S,T,U,u,Y,=,-,º,[,],",'
- */
-
-/************/
-/* Commands */
-/************/
-
-/* 
- * CMD1 - Display mode setting command
- *       b7 b6 b5 b4 b3 b2 b1 b0
- *        0  0  -  -  -  -  x  x
- *  xx: 00 9 segments x 4 groups
- *      01 8 segments x 5 groups
- *      10 7 segments x 6 groups
- *      11 6 segments x 7 groups
- */
-#define DISPLAY_9SEGMENTS 0
-#define DISPLAY_8SEGMENTS 1
-#define DISPLAY_7SEGMENTS 2
-#define DISPLAY_6SEGMENTS 3
-static uint8_t cmd1_display_mode (uint8_t segments)
-{
-	if(segments > 5 && segments < 10) {
-		return (9-segments);
-	}
-	return 0xFF;
-}
-
-/*
- * CMD2 - Data setting command
- *      b7 b6 b5 b4 b3 b2 b1 b0
- *       0  1  -  -  x  y  z  z
- *  x: 0 = Normal mode
- *     1 = Test mode
- *  y: 0 = Increment address after data is written
- *     1 = Keep address unchanged
- *  zz: 00 = Write data to the display
- *      01 = Read key scan data
- */
-#define DISPLAY_MODE_NORMAL 0
-#define DISPLAY_MODE_TEST 1
-#define DISPLAY_ADDRESS_AUTO_INCREMENT 0
-#define DISPLAY_ADDRESS_UNCHANGED 1
-#define DISPLAY_WRITE 0
-#define DISPLAY_READ_KEYS 1
-static uint8_t cmd2_data_setting (uint8_t mode, uint8_t address_increment, uint8_t read_mode)
-{
-	uint8_t ret = 0x40;
-	// Setting display mode value
-	ret = ret|((mode&1)<<3);
-	// Setting address increment mode
-	ret = ret|((address_increment&1)<<2);
-	// Setting write or read mode
-	ret = ret|(read_mode&1);
-
-	return ret;
-}
-
-/*
- * CMD3 - Address setting command
- *      b7 b6 b5 b4 b3 b2 b1 b0
- *       1  1  -  -  x  x  x  x
- * xxxx: Address position (0x00 -> 0x0D)
- */
-static uint8_t cmd3_set_address (uint8_t address)
-{
-	uint8_t ret = 0xC0;
-	if (address >= 0x00 && address <= 0x0D) {
-		ret = ret|(address&0x0F);
-	}
-	return ret;
-}
-
-/*
- * CMD4 - Display control command
- *     b7 b6 b5 b4 b3 b2 b1 b0
- *      1  0  -  -  x  y  y  y
- *  x: 0 = Display off (key scan continues)
- *     1 = Display on
- *  yyy: Dimmer level setting 0 to 8 levels
- */
-#define DISPLAY_OFF 0
-#define DISPLAY_ON 1
-static uint8_t cmd4_display_control (uint8_t on, uint8_t brightness)
-{
-	uint8_t ret = 0x80;
-	ret = ret|((on&1)<<3);
-	ret = ret|(brightness&0x07);
-	return ret;
-}
-
-uint8_t lookup[16] = {
-   0x0, 0x8, 0x4, 0xC,
-   0x2, 0xA, 0x6, 0xE,
-   0x1, 0x9, 0x5, 0xD,
-   0x3, 0xB, 0x7, 0xF };
-
-uint8_t flip( uint8_t n )
-{
-   //This should be just as fast and it is easier to understand.
-   //return (lookup[n%16] << 4) | lookup[n/16];
-   return (lookup[n&0x0F] << 4) | lookup[n>>4];
-}
-
-static uint8_t command(int fd, uint8_t tx[], uint8_t *rx, uint8_t size)
-{
-	int ret;
-
-	uint8_t i;
-	for(i=0;i<size;i++) {
-		tx[i] = flip(tx[i]);
-	}
-
-	struct spi_ioc_transfer tr = {
-		.tx_buf = (unsigned long)tx,
-		.rx_buf = (unsigned long)rx,
-		.len = size,
-		.delay_usecs = delay,
-		.speed_hz = speed,
-		.bits_per_word = bits,
-	};
-	ret = ioctl(fd, SPI_IOC_MESSAGE(1), &tr);
-	if (ret < 1) {
-		perror("Can't send api message");
-		return ret;
-	}
-
-	#ifdef DEBUG
-	for (ret = 0; ret < size; ret++) {
-		if(!(ret%8)) puts("");
-		printf("%.2X ", rx[ret]);
-	}
-	#endif
-
-	return ret;
-}
-
-static void et6220_init(int fd, uint8_t segments)
-{
-	
-	uint8_t rd_buff[20];
-
-	uint8_t cmd2_write[1];
-	cmd2_write[0] = cmd2_data_setting(DISPLAY_MODE_NORMAL,DISPLAY_ADDRESS_AUTO_INCREMENT,DISPLAY_WRITE);
-	
-	printf("Starting ET6220 device...\n");
-	printf("CMD2 %.2X\n",cmd2_write[0]);
-	command(fd, cmd2_write, rd_buff, 1);
-
-	uint8_t cmd3_clear_ram[1];
-	cmd3_clear_ram[0] = cmd3_set_address(0x00);
-	printf("CMD3 %.2X\n",cmd3_clear_ram[0]);
-	command(fd, cmd3_clear_ram, rd_buff, 1);
-
-	uint8_t cmd1_setup_mode[1];
-	cmd1_setup_mode[0] = cmd1_display_mode(segments);
-	printf("CMD1 %.2X\n",cmd1_setup_mode[0]);
-	command(fd, cmd1_setup_mode, rd_buff, 1);
-
-	uint8_t cmd4_display_off[1];
-	cmd4_display_off[0] = cmd4_display_control(DISPLAY_OFF,7);
-	printf("CMD4 %.2X\n", cmd4_display_off[0]);
-	command(fd, cmd4_display_off, rd_buff, 1);
-
-	printf("CMD1 %.2X\n", cmd1_setup_mode[0]);
-	command(fd, cmd1_setup_mode, rd_buff, 1);
-
-	uint8_t cmd4_display_on[1];
-	cmd4_display_on[0] = cmd4_display_control(DISPLAY_ON,7);
-	printf("CMD4 %.2X", cmd4_display_on[0]);
-	command(fd, cmd4_display_on, rd_buff, 1);
-
-}
 
 static void print_usage(const char *prog)
 {
@@ -364,11 +170,18 @@ int main(int argc, char *argv[])
 	printf("bits per word: %d\n", bits);
 	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
 
-	et6220_init(fd,DISPLAY_8SEGMENTS);
+	/* ET6220 CODE */
+	spi_et6220_device dev = {
+		.spi_fd = fd,
+		.spi_delay = delay,
+		.spi_speed_hz = speed
+	}
+
+	et6220_init(dev, DISPLAY_8SEGMENTS);
 
 	uint8_t set_write_mode[1];
 	set_write_mode[0] = cmd2_data_setting(DISPLAY_MODE_NORMAL, DISPLAY_ADDRESS_AUTO_INCREMENT, DISPLAY_WRITE);
-	command(fd, set_write_mode, set_write_mode, 1);
+	et6220_command(dev, set_write_mode, set_write_mode, 1);
 
 	uint8_t display_data[15] = {
 		0x00,0xFF,0xFF,0xFF,
@@ -381,14 +194,14 @@ int main(int argc, char *argv[])
 	display_data[7] = 0x00;//number_to_segment[4];
 	display_data[9] = 0x00;//number_to_segment[5];
 	display_data[0] = cmd3_set_address(0x00);
-	command(fd, display_data, display_data, 15);
+	et6220_command(dev, display_data, display_data, 15);
 
 	uint8_t buf[1];
 	buf[0] = cmd1_display_mode(DISPLAY_8SEGMENTS);
-	command(fd, buf, buf, 1);
+	et6220_command(dev, buf, buf, 1);
 
-	buf[0] = cmd4_display_control(DISPLAY_ON,0);
-	command(fd, buf, buf, 1);
+	buf[0] = cmd4_display_control(DISPLAY_ON,7);
+	et6220_command(dev, buf, buf, 1);
 
 	close(fd);
 

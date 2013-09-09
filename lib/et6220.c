@@ -9,6 +9,8 @@
  *
  */
 
+#include "et6220.h"
+
 /* MSB first to LSB first translation */
 uint8_t lookup[16] = {
    0x0, 0x8, 0x4, 0xC,
