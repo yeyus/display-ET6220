@@ -171,11 +171,11 @@ int main(int argc, char *argv[])
 	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
 
 	/* ET6220 CODE */
-	spi_et6220_device dev = {
+	struct spi_et6220_device dev = {
 		.spi_fd = fd,
 		.spi_delay = delay,
 		.spi_speed_hz = speed
-	}
+	};
 
 	et6220_init(dev, DISPLAY_8SEGMENTS);
 
