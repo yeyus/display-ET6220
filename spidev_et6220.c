@@ -171,17 +171,17 @@ int main(int argc, char *argv[])
 	printf("max speed: %d Hz (%d KHz)\n", speed, speed/1000);
 
 	/* ET6220 CODE */
-	struct spi_et6220_device dev = {
+	spi_et6220_device dev = {
 		.spi_fd = fd,
 		.spi_delay = delay,
 		.spi_speed_hz = speed
 	};
 
-	et6220_init(dev, DISPLAY_8SEGMENTS);
+	et6220_init(&dev, DISPLAY_8SEGMENTS);
 
 	uint8_t set_write_mode[1];
 	set_write_mode[0] = cmd2_data_setting(DISPLAY_MODE_NORMAL, DISPLAY_ADDRESS_AUTO_INCREMENT, DISPLAY_WRITE);
-	et6220_command(dev, set_write_mode, set_write_mode, 1);
+	et6220_command(&dev, set_write_mode, set_write_mode, 1);
 
 	uint8_t display_data[15] = {
 		0x00,0xFF,0xFF,0xFF,
@@ -194,14 +194,14 @@ int main(int argc, char *argv[])
 	display_data[7] = 0x00;//number_to_segment[4];
 	display_data[9] = 0x00;//number_to_segment[5];
 	display_data[0] = cmd3_set_address(0x00);
-	et6220_command(dev, display_data, display_data, 15);
+	et6220_command(&dev, display_data, display_data, 15);
 
 	uint8_t buf[1];
 	buf[0] = cmd1_display_mode(DISPLAY_8SEGMENTS);
-	et6220_command(dev, buf, buf, 1);
+	et6220_command(&dev, buf, buf, 1);
 
 	buf[0] = cmd4_display_control(DISPLAY_ON,7);
-	et6220_command(dev, buf, buf, 1);
+	et6220_command(&dev, buf, buf, 1);
 
 	close(fd);
 

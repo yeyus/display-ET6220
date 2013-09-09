@@ -76,30 +76,30 @@ void et6220_init(spi_et6220_device *dev, uint8_t segments)
 	
 	printf("Starting ET6220 device...\n");
 	printf("CMD2 %.2X\n",cmd2_write[0]);
-	et6220_command(dev->spi_fd, cmd2_write, rd_buff, 1);
+	et6220_command(dev, cmd2_write, rd_buff, 1);
 
 	uint8_t cmd3_clear_ram[1];
 	cmd3_clear_ram[0] = cmd3_set_address(0x00);
 	printf("CMD3 %.2X\n",cmd3_clear_ram[0]);
-	et6220_command(dev->spi_fd, cmd3_clear_ram, rd_buff, 1);
+	et6220_command(dev, cmd3_clear_ram, rd_buff, 1);
 
 	uint8_t cmd1_setup_mode[1];
 	cmd1_setup_mode[0] = cmd1_display_mode(segments);
 	printf("CMD1 %.2X\n",cmd1_setup_mode[0]);
-	et6220_command(dev->spi_fd, cmd1_setup_mode, rd_buff, 1);
+	et6220_command(dev, cmd1_setup_mode, rd_buff, 1);
 
 	uint8_t cmd4_display_off[1];
 	cmd4_display_off[0] = cmd4_display_control(DISPLAY_OFF,7);
 	printf("CMD4 %.2X\n", cmd4_display_off[0]);
-	et6220_command(dev->spi_fd, cmd4_display_off, rd_buff, 1);
+	et6220_command(dev, cmd4_display_off, rd_buff, 1);
 
 	printf("CMD1 %.2X\n", cmd1_setup_mode[0]);
-	et6220_command(dev->spi_fd, cmd1_setup_mode, rd_buff, 1);
+	et6220_command(dev, cmd1_setup_mode, rd_buff, 1);
 
 	uint8_t cmd4_display_on[1];
 	cmd4_display_on[0] = cmd4_display_control(DISPLAY_ON,7);
 	printf("CMD4 %.2X", cmd4_display_on[0]);
-	et6220_command(dev->spi_fd, cmd4_display_on, rd_buff, 1);
+	et6220_command(dev, cmd4_display_on, rd_buff, 1);
 
 }
 
