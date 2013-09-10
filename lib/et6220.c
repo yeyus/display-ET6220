@@ -136,3 +136,32 @@ uint8_t et6220_command(spi_et6220_device *dev, uint8_t tx[], uint8_t *rx, uint8_
 
 	return ret;
 }
+
+void et6220_send_data(spi_et6220_device *dev, et6220_display_data *data) 
+{
+	uint8_t display_data[15] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	display_data[0] = cmd3_set_address(0x00);
+
+	display_data[1] = SEGMENT_BYTE_HIGH(data->g1);
+	display_data[2] = SEGMENT_BYTE_LOW(data->g1);
+	
+	display_data[3] = SEGMENT_BYTE_HIGH(data->g2);
+	display_data[4] = SEGMENT_BYTE_LOW(data->g2);
+
+	display_data[5] = SEGMENT_BYTE_HIGH(data->g3);
+	display_data[6] = SEGMENT_BYTE_LOW(data->g3);
+
+	display_data[7] = SEGMENT_BYTE_HIGH(data->g4);
+	display_data[8] = SEGMENT_BYTE_LOW(data->g4);
+
+	display_data[9] = SEGMENT_BYTE_HIGH(data->g5);
+	display_data[10] = SEGMENT_BYTE_LOW(data->g5);
+
+	display_data[11] = SEGMENT_BYTE_HIGH(data->g6);
+	display_data[12] = SEGMENT_BYTE_LOW(data->g6);
+
+	display_data[13] = SEGMENT_BYTE_HIGH(data->g7);
+	display_data[14] = SEGMENT_BYTE_LOW(data->g7);
+
+	et6220_command(dev, display_data, display_data, 15);
+}

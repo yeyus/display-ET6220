@@ -68,6 +68,16 @@
 #define SEGMENT_BYTE_HIGH(x) ((x&0xFF00)>>8)
 #define SEGMENT_BYTE_LOW(x) (x&0x00FF)
 
+typedef struct {
+	uint16_t g1;
+	uint16_t g2;
+	uint16_t g3;
+	uint16_t g4;
+	uint16_t g5;
+	uint16_t g6;
+	uint16_t g7;
+} et6220_display_data;
+
 /* ET6220 struct */
 typedef struct {
 	uint32_t spi_fd;
@@ -125,4 +135,4 @@ uint8_t cmd4_display_control (uint8_t on, uint8_t brightness);
 
 void et6220_init(spi_et6220_device *dev, uint8_t segments);
 uint8_t et6220_command(spi_et6220_device *dev, uint8_t tx[], uint8_t *rx, uint8_t size);
-
+void et6220_send_data(spi_et6220_device *dev, et6220_display_data *data); 

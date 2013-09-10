@@ -183,18 +183,14 @@ int main(int argc, char *argv[])
 	set_write_mode[0] = cmd2_data_setting(DISPLAY_MODE_NORMAL, DISPLAY_ADDRESS_AUTO_INCREMENT, DISPLAY_WRITE);
 	et6220_command(&dev, set_write_mode, set_write_mode, 1);
 
-	uint8_t display_data[15] = {
-		0x00,0xFF,0xFF,0xFF,
-		0x00,0xFF,0x00,0xFF,
-		0x00,0xFF,0x00,0xFF,
-		0x00,0xFF,0x00};
-	display_data[1] = 0xFF;//number_to_segment[8];
-	display_data[3] = 0x00;//number_to_segment[2];
-	display_data[5] = 0x00;//number_to_segment[3];
-	display_data[7] = 0x00;//number_to_segment[4];
-	display_data[9] = 0x00;//number_to_segment[5];
-	display_data[0] = cmd3_set_address(0x00);
-	et6220_command(&dev, display_data, display_data, 15);
+	et6220_display_data data = {
+		.g1 = (SEGMENT_A),
+		.g2 = (SEGMENT_G),
+		.g3 = (SEGMENT_D),
+		.g4 = (SEGMENT_G),
+		.g5 = (SEGMENT_A)
+	};
+	et6220_send_data(&dev, &data);
 
 	uint8_t buf[1];
 	buf[0] = cmd1_display_mode(DISPLAY_8SEGMENTS);
