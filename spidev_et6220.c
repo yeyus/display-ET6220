@@ -179,9 +179,7 @@ int main(int argc, char *argv[])
 
 	et6220_init(&dev, DISPLAY_8SEGMENTS);
 
-	uint8_t set_write_mode[1];
-	set_write_mode[0] = cmd2_data_setting(DISPLAY_MODE_NORMAL, DISPLAY_ADDRESS_AUTO_INCREMENT, DISPLAY_WRITE);
-	et6220_command(&dev, set_write_mode, set_write_mode, 1);
+	et6220_write_mode(&dev, DISPLAY_ADDRESS_AUTO_INCREMENT);
 
 	et6220_display_data data = {
 		.g1 = (SEGMENT_A),

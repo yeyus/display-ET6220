@@ -134,5 +134,6 @@ uint8_t cmd4_display_control (uint8_t on, uint8_t brightness);
 /* Display handling */
 
 void et6220_init(spi_et6220_device *dev, uint8_t segments);
+void et6220_write_mode(spi_et6220_device *dev, uint8_t address_increment);
 uint8_t et6220_command(spi_et6220_device *dev, uint8_t tx[], uint8_t *rx, uint8_t size);
 void et6220_send_data(spi_et6220_device *dev, et6220_display_data *data); 

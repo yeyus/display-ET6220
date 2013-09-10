@@ -103,6 +103,12 @@ void et6220_init(spi_et6220_device *dev, uint8_t segments)
 
 }
 
+void et6220_write_mode(spi_et6220_device *dev, uint8_t address_increment) {
+	uint8_t buf[1];
+	buf[0] = cmd2_data_setting(DISPLAY_MODE_NORMAL, address_increment, DISPLAY_WRITE);
+	et6220_command(dev, buf, buf, 1);	
+}
+
 /* Low level communication support */
 uint8_t et6220_command(spi_et6220_device *dev, uint8_t tx[], uint8_t *rx, uint8_t size)
 {
