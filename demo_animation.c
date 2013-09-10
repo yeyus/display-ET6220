@@ -15,6 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
+#include <time.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <linux/types.h>
@@ -102,6 +103,10 @@ int main(int argc, char *argv[])
 	et6220_write_mode(&dev, DISPLAY_ADDRESS_AUTO_INCREMENT);
 
 	uint8_t buf[1];
+	struct timespec tim, tim2;
+   	tim.tv_sec = 0;
+   	tim.tv_nsec = 200000000L;
+
 	while(1) {
 		
 		et6220_display_data data = {
@@ -123,8 +128,8 @@ int main(int argc, char *argv[])
 		flowpos = ((flowpos+1)%5);
 		bpos = ((bpos+1)%8);
 
-		// wait
-		sleep(1);
+		// wait 200ms
+		nanosleep(&tim , &tim2);
 	}
 
 	close(fd);
