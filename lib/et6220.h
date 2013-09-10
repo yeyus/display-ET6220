@@ -21,10 +21,10 @@
 #include <linux/spi/spidev.h>
 
 /* CMD1 constants */
-#define DISPLAY_9SEGMENTS 0
-#define DISPLAY_8SEGMENTS 1
-#define DISPLAY_7SEGMENTS 2
-#define DISPLAY_6SEGMENTS 3
+#define DISPLAY_9SEGMENTS 9
+#define DISPLAY_8SEGMENTS 8
+#define DISPLAY_7SEGMENTS 7
+#define DISPLAY_6SEGMENTS 6
 
 /* CMD2 constants */
 #define DISPLAY_MODE_NORMAL 0
@@ -39,6 +39,34 @@
 /* CMD4 constants */
 #define DISPLAY_OFF 0
 #define DISPLAY_ON 1
+
+/* Segments byte
+
+       a
+    *******      d=0x0100
+   *       *     c=0x0200
+ f *       * b   b=0x0400
+   *   g   *     a=0x0800
+    *******      e=0x1000
+   *       *     f=0x2000
+ e *       * c   g=0x0008
+   *       *     doubledot=0x0010 (only on group 3 and 5)
+    *******
+       d
+*/
+
+#define SEGMENT_A 0x0800
+#define SEGMENT_B 0x0400
+#define SEGMENT_C 0x0200
+#define SEGMENT_D 0x0100
+#define SEGMENT_E 0x1000
+#define SEGMENT_F 0x2000
+#define SEGMENT_G 0x0008
+#define SEGMENT_DOT 0x0010
+
+/* On the segment data array high would be data[1] and low data[2] for digit 1 */
+#define SEGMENT_BYTE_HIGH(x) ((X&0xFF00)>>8)
+#define SEGMENT_BYTE_LOW(x) (X&0x00FF)
 
 /* ET6220 struct */
 typedef struct {
