@@ -65,8 +65,8 @@
 #define SEGMENT_DOT 0x0010
 
 /* On the segment data array high would be data[1] and low data[2] for digit 1 */
-#define SEGMENT_BYTE_HIGH(x) ((X&0xFF00)>>8)
-#define SEGMENT_BYTE_LOW(x) (X&0x00FF)
+#define SEGMENT_BYTE_HIGH(x) ((x&0xFF00)>>8)
+#define SEGMENT_BYTE_LOW(x) (x&0x00FF)
 
 /* ET6220 struct */
 typedef struct {
