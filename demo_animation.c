@@ -97,6 +97,7 @@ int main(int argc, char *argv[])
 		SEGMENT_G,
 		SEGMENT_A
 	};
+	uint8_t bflow[16] = {0,1,2,3,4,5,6,7,7,6,5,4,3,2,1,0};
 
 	et6220_init(&dev, DISPLAY_8SEGMENTS);
 
@@ -121,12 +122,12 @@ int main(int argc, char *argv[])
 		buf[0] = cmd1_display_mode(DISPLAY_8SEGMENTS);
 		et6220_command(&dev, buf, buf, 1);
 
-		buf[0] = cmd4_display_control(DISPLAY_ON,bpos);
+		buf[0] = cmd4_display_control(DISPLAY_ON,bflow[bpos]);
 		et6220_command(&dev, buf, buf, 1);
 
 		// increments
 		flowpos = ((flowpos+1)%5);
-		bpos = ((bpos+1)%8);
+		bpos = ((bpos+1)%16);
 
 		// wait 200ms
 		nanosleep(&tim , &tim2);
