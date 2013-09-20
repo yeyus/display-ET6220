@@ -51,16 +51,16 @@ static void parse_opts(int argc, char *argv[])
 {
 	while (1) {
 		static const struct option lopts[] = {
-			{ "device",  1, 0, 'D' },
-			{ "speed",   1, 0, 's' },
-			{ "delay",   1, 0, 'd' },
-			{ "bright",  1, 0, 'b' },
-			{ "message", 1, 0, 'm' },		
+			{ "device",  required_argument, 0, 'D' },
+			{ "speed",   required_argument, 0, 's' },
+			{ "delay",   required_argument, 0, 'd' },
+			{ "bright",  required_argument, 0, 'b' },
+			{ "message", required_argument, 0, 'm' },		
 			{ NULL, 0, 0, 0 },
 		};
 		int c;
 
-		c = getopt_long(argc, argv, "D:s:d:m:b:", lopts, NULL);
+		c = getopt_long(argc, argv, "D:s:d:b:m:", lopts, NULL);
 
 		if (c == -1)
 			break;
@@ -80,7 +80,9 @@ static void parse_opts(int argc, char *argv[])
 			break;
 		case 'm':
 			message = optarg;
+			break;
 		default:
+			printf("%c\n", c);
 			print_usage(argv[0]);
 			break;
 		}
