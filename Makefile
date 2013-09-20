@@ -12,13 +12,16 @@ test_et6220: test_et6220.o et6220.o
 	$(CC) $(LDFLAGS) test_et6220.o et6220.o -o $(BIN)/test_et6220
 
 writeto_et6220: writeto_et6220.o segment_parser.o et6220.o
-	$(CC) $(LDFLAGS) test_et6220.o segment_parser.o et6220.o -o $(BIN)/writeto_et6220	
+	$(CC) $(LDFLAGS) writeto_et6220.o segment_parser.o et6220.o -o $(BIN)/writeto_et6220	
 
 demo_animation.o:
 	$(CC) $(CFLAGS) demo_animation.c
 
 test_et6220.o:
 	$(CC) $(CFLAGS) test_et6220.c	
+
+writeto_et6220.o:
+	$(CC) $(CFLAGS) writeto_et6220.c		
 
 et6220.o:
 	$(CC) $(CFLAGS) lib/et6220.c
