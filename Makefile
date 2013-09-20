@@ -12,4 +12,4 @@ $(BIN)/%:  $(SOURCE)%.c
 	$(CC) $< $(CFLAGS) -o $@
 
 clean:
-	rm -f $(BIN)/*
+	rm -f $(BIN)*
