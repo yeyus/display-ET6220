@@ -93,7 +93,7 @@ void set_segment(uint8_t segment_pos, et6220_display_data *data, uint16_t segmen
 /*
  * Parse custom segment 
  */
-void parse_custom_segment(u_char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_data *data) 
+void parse_custom_segment(char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_data *data) 
 {
 	uint8_t iterate = 1;
 	uint16_t segment_data = 0;
@@ -136,7 +136,7 @@ void parse_custom_segment(u_char *str, uint8_t *char_pos, uint8_t *segment_pos, 
 
 }
 
-void parse(u_char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_data *data) 
+void parse(char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_data *data) 
 {
 
 	u_char ch = str[*char_pos];
