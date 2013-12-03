@@ -59,9 +59,9 @@ uint16_t get_character(u_char character)
  */ 
 void set_colon(uint8_t segment_pos, et6220_display_data *data)
 {
-	if(segment_pos == 3) {
+        if(segment_pos == 2) {//2+1
 		data->g3 = data->g3|SEGMENT_DOT;
-	} else if (segment_pos == 5) {
+	} else if (segment_pos == 4) { //4+1
 		data->g5 = data->g5|SEGMENT_DOT;
 	}
 }
@@ -73,19 +73,19 @@ void set_segment(uint8_t segment_pos, et6220_display_data *data, uint16_t segmen
 {
 	switch(segment_pos) {
 		case 1:
-			data->g1 = segment_data;
+			data->g1 |= segment_data;
 			break;
 		case 2:
-			data->g2 = segment_data;
+			data->g2 |= segment_data;
 			break;
 		case 3:
-			data->g3 = segment_data;
+			data->g3 |= segment_data;
 			break;
 		case 4:
-			data->g4 = segment_data;
+			data->g4 |= segment_data;
 			break;
 		case 5:
-			data->g5 = segment_data;
+			data->g5 |= segment_data;
 			break;
 	}	
 }
@@ -121,7 +121,10 @@ void parse_custom_segment(char *str, uint8_t *char_pos, uint8_t *segment_pos, et
 				segment_data |= SEGMENT_F;
 				break;
 			case 'g':
-				segment_data |= SEGMENT_F;
+				segment_data |= SEGMENT_G;
+				break;
+		        case '.':
+			        segment_data |= SEGMENT_DOT;
 				break;
 			case '#':
 				// end of definition write to segment and end
@@ -131,7 +134,7 @@ void parse_custom_segment(char *str, uint8_t *char_pos, uint8_t *segment_pos, et
 			default:
 				return;
 		}
-		*char_pos++;
+		(*char_pos)++;
 	}
 
 }
@@ -147,10 +150,13 @@ void parse(char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_da
 		set_segment(*segment_pos, data, get_character(ch));
 	} else if (ch == ':') {
 		// our character is the colon		
-		set_colon(segment_pos, data);
+		set_colon(*segment_pos, data);
+		if((*segment_pos) > 0) {
+		  (*segment_pos)--;
+		}
 	} else if (ch == '#') {
 		// we detected a segment definition start
-		char_pos++;
+		(*char_pos)++;
 		ch = str[*char_pos];
 		// start parsing custom segment data
 		parse_custom_segment(str, char_pos, segment_pos, data);
@@ -163,8 +169,8 @@ void parse(char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_da
 	}
 
 	// increment char_pos and segment
-	*char_pos++;
-	*segment_pos++;
+	(*char_pos)++;
+	(*segment_pos)++;
 	parse(str, char_pos, segment_pos, data);
 
 }
