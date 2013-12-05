@@ -18,38 +18,100 @@ uint16_t get_character(u_char character)
 {
 	uint16_t ret = 0x00;
 	switch(character) {
-		case '0':
-			ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F);
-			break;
-		case '1':
-			ret = (SEGMENT_B|SEGMENT_C);
-			break;
-		case '2':
-			ret = (SEGMENT_A|SEGMENT_B|SEGMENT_D|SEGMENT_E|SEGMENT_G); 
-			break;
-		case '3':
-			ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_G);
-			break;
-		case '4':
-			ret = (SEGMENT_B|SEGMENT_C|SEGMENT_F|SEGMENT_G);
-			break;
-		case '5':
-			ret = (SEGMENT_A|SEGMENT_F|SEGMENT_C|SEGMENT_D|SEGMENT_G);
-			break;
-		case '6':
-			ret = (SEGMENT_A|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F|SEGMENT_G);
-			break;
-		case '7':
-			ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C);
-			break;
-		case '8':
-			ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F|SEGMENT_G);
-			break;
-		case '9':
-			ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_F|SEGMENT_G);
-			break;
-		default:
-			ret = 0;
+	  case '0':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F);
+	    break;
+	  case '1':
+	    ret = (SEGMENT_B|SEGMENT_C);
+	    break;
+	  case '2':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_D|SEGMENT_E|SEGMENT_G); 
+	    break;
+	  case '3':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_G);
+	    break;
+	  case '4':
+	    ret = (SEGMENT_B|SEGMENT_C|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case '5':
+	    ret = (SEGMENT_A|SEGMENT_F|SEGMENT_C|SEGMENT_D|SEGMENT_G);
+	    break;
+	  case '6':
+	    ret = (SEGMENT_A|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case '7':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C);
+	    break;
+	  case '8':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case '9':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case 'A':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_E|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case 'b':
+	    ret = (SEGMENT_F|SEGMENT_E|SEGMENT_D|SEGMENT_C|SEGMENT_G);
+	    break;
+	  case 'C':
+            ret = (SEGMENT_A|SEGMENT_F|SEGMENT_E|SEGMENT_D);
+	    break;
+	  case 'c':
+	    ret = (SEGMENT_G|SEGMENT_E|SEGMENT_D);
+	    break;
+	  case 'd':
+	    ret = (SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_G);
+	    break;
+	  case 'E':
+	    ret = (SEGMENT_A|SEGMENT_G|SEGMENT_D|SEGMENT_F|SEGMENT_E);
+	    break;
+	  case 'e':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_D|SEGMENT_E|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case 'F':
+	    ret = (SEGMENT_A|SEGMENT_D|SEGMENT_E|SEGMENT_F|SEGMENT_G);
+	    break;
+	  case 'G':
+	    ret = (SEGMENT_A|SEGMENT_F|SEGMENT_E|SEGMENT_D|SEGMENT_C);
+	    break;
+	  case 'H':
+	    ret = (SEGMENT_B|SEGMENT_C|SEGMENT_E|SEGMENT_F|SEGMENT_G); 
+	    break;
+	  case 'I':
+	    ret = (SEGMENT_B|SEGMENT_C);
+	  case 'J':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E);
+	    break;
+	  case 'L':
+	    ret = (SEGMENT_D|SEGMENT_E|SEGMENT_F);
+	    break;
+	  case 'O':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F);
+	    break;
+	  case 'o':
+	    ret = (SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_G);
+	    break;
+	  case 'S':
+	    ret = (SEGMENT_A|SEGMENT_F|SEGMENT_C|SEGMENT_D|SEGMENT_G);
+	    break;
+	  case 'T':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C);
+	    break;
+	  case 'U':
+	    ret = (SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F);
+	    break;
+	  case 'u':
+	    ret = (SEGMENT_E|SEGMENT_D|SEGMENT_C);
+	    break;
+	  case 'Y':
+	    ret = (SEGMENT_B|SEGMENT_F|SEGMENT_C|SEGMENT_E|SEGMENT_G|SEGMENT_D);
+	    break;
+	  case 'Z':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_E|SEGMENT_D|SEGMENT_G);
+	    break;
+	  default:
+	    ret = 0;
 	}
 	return ret;
 }
