@@ -110,6 +110,7 @@ uint16_t get_character(u_char character)
 	  case 'Z':
 	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_E|SEGMENT_D|SEGMENT_G);
 	    break;
+	  case ' ':
 	  default:
 	    ret = 0;
 	}
@@ -135,19 +136,19 @@ void set_segment(uint8_t segment_pos, et6220_display_data *data, uint16_t segmen
 {
 	switch(segment_pos) {
 		case 1:
-			data->g1 |= segment_data;
+			data->g5 |= segment_data;
 			break;
 		case 2:
-			data->g2 |= segment_data;
+			data->g4 |= segment_data;
 			break;
 		case 3:
 			data->g3 |= segment_data;
 			break;
 		case 4:
-			data->g4 |= segment_data;
+			data->g2 |= segment_data;
 			break;
 		case 5:
-			data->g5 |= segment_data;
+			data->g1 |= segment_data;
 			break;
 	}	
 }
