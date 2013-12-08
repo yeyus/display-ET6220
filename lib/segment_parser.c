@@ -81,6 +81,7 @@ uint16_t get_character(u_char character)
 	    break;
 	  case 'I':
 	    ret = (SEGMENT_B|SEGMENT_C);
+	    break;
 	  case 'J':
 	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E);
 	    break;
