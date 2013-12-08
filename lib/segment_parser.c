@@ -93,6 +93,9 @@ uint16_t get_character(u_char character)
 	  case 'o':
 	    ret = (SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_G);
 	    break;
+	  case 'P':
+	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_G|SEGMENT_F|SEGMENT_E);
+	    break;
 	  case 'S':
 	    ret = (SEGMENT_A|SEGMENT_F|SEGMENT_C|SEGMENT_D|SEGMENT_G);
 	    break;
