@@ -12,11 +12,12 @@
 
 /* 
  * Receives a character as a parameter an returns a uint16_t
- * mapping according to et6220 display
+ * mapping according to et6220 display. Returns 0xFFFF if it
+ * failed to lookup a character
  */
 uint16_t get_character(u_char character) 
 {
-	uint16_t ret = 0x00;
+	uint16_t ret = 0xFFFF;
 	switch(character) {
 	  case '0':
 	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_C|SEGMENT_D|SEGMENT_E|SEGMENT_F);
@@ -110,9 +111,20 @@ uint16_t get_character(u_char character)
 	  case 'Z':
 	    ret = (SEGMENT_A|SEGMENT_B|SEGMENT_E|SEGMENT_D|SEGMENT_G);
 	    break;
+	  case '-':
+	    ret = (SEGMENT_G);
+	    break;
+	  case '_':
+	    ret = (SEGMENT_D);
+	    break;
+	  case '^':
+	    ret = (SEGMENT_A);
+	    break;
 	  case ' ':
-	  default:
 	    ret = 0;
+	    break;
+	  default:
+	    ret = 0xFFFF;
 	}
 	return ret;
 }
@@ -208,7 +220,7 @@ void parse(char *str, uint8_t *char_pos, uint8_t *segment_pos, et6220_display_da
 	u_char ch = str[*char_pos];
 	
 	// consume character
-	if(get_character(ch) != 0) {
+	if(get_character(ch) != 0xFFFF) {
 		// our character is in the lookup so we set it
 		set_segment(*segment_pos, data, get_character(ch));
 	} else if (ch == ':') {
